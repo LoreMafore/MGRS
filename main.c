@@ -3,8 +3,13 @@
 //
 
 #include <stdio.h>
+#include "test.h"
 
 int main()
 {
+    glfwInit();
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+
+
     printf("Hello World\n");
 }
