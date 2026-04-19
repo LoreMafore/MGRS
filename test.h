@@ -20,5 +20,7 @@ void createInstance();
 void pickPhysicalDevice(); //picks a physical GPU
 uint32_t findGraphicsFamily(); //searching for queue family that can use graphics
 void createDevice();
+void createSwapChain();
+void cleaRnup();
 
 #endif //MGRS_TEST_H
