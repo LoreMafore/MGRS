@@ -5,20 +5,21 @@
 #include "test.h"
 
 char test_window_name[50] = "Test";
-GLFWwindow        *window;
-VkInstance        instance;
-VkSurfaceKHR      surface;
-VkPhysicalDevice  physical_device = VK_NULL_HANDLE;
-VkDevice          device;
-VkQueue           graphics_queue;
-VkSwapchainKHR    swap_chain;
+// GLFWwindow        *window;
+// VkInstance        instance;
+// VkSurfaceKHR      surface;
+// VkPhysicalDevice  physical_device = VK_NULL_HANDLE;
+// VkDevice          device;
+// VkQueue           graphics_queue;
+// VkSwapchainKHR    swap_chain;
 
-void createWindow(GLFWwindow *window, char window_name[50] )
+GLFWwindow* createWindow(GLFWwindow* window, char window_name[50])
 {
     window = glfwCreateWindow(WIDTH, HEIGHT, window_name, NULL, NULL);
+    return window;
 }
 
-void createInstance()
+void createInstance(VkInstance instance)
 {
     VkApplicationInfo appInfo = {
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
@@ -44,7 +45,7 @@ void createInstance()
     }
 }
 
-void pickPhysicalDevice()
+void pickPhysicalDevice(VkInstance instance, VkPhysicalDevice physical_device)
 {
     uint32_t count = 0;
     vkEnumeratePhysicalDevices(instance, &count, NULL); //gets the amount of devices
@@ -54,7 +55,7 @@ void pickPhysicalDevice()
     free(devices);
 }
 
-uint32_t findGraphicsFamily()
+uint32_t findGraphicsFamily(VkPhysicalDevice physical_device)
 {
     uint32_t count = 0;
     vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &count, NULL);
@@ -75,9 +76,9 @@ uint32_t findGraphicsFamily()
     exit(1);
 }
 
-void createDevice()
+void createDevice(VkPhysicalDevice physical_device, VkDevice device)
 {
-    uint32_t queue_family = findGraphicsFamily();
+    uint32_t queue_family = findGraphicsFamily(physical_device);
     float priority = 1.0f;
 
     VkDeviceQueueCreateInfo queue_info = {
@@ -106,7 +107,7 @@ void createDevice()
     vkGetDeviceQueue(device, queue_family, 0, &device);
 }
 
-void createSwapChain()
+void createSwapChain(VkSurfaceKHR surface, VkPhysicalDevice physical_device, VkDevice device, VkSwapchainKHR swap_chain)
 {
     VkSurfaceCapabilitiesKHR capabilities;
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface, &capabilities);
@@ -124,10 +125,22 @@ void createSwapChain()
         .presentMode = VK_PRESENT_MODE_FIFO_KHR,
         .clipped = VK_TRUE,
         .preTransform = capabilities.currentTransform,
-        
+        .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
     };
+
+    if (vkCreateSwapchainKHR(device, &info, NULL, &swap_chain) != VK_SUCCESS)
+    {
+        fprintf(stderr, "failed to create swap chain\n");
+        exit(1);
+    }
 }
 
-void cleanup()
+void cleanup(VkInstance instance, GLFWwindow* window, VkSurfaceKHR surface, VkDevice device, VkSwapchainKHR swap_chain)
 {
+    vkDestroySwapchainKHR(device,swap_chain, NULL);
+    vkDestroyDevice(device, NULL);
+    vkDestroySurfaceKHR(instance,surface, NULL);
+    vkDestroyInstance(instance, NULL);
+    glfwDestroyWindow(window);
+    glfwTerminate();
 }
