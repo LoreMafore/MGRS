@@ -4,22 +4,13 @@
 
 #include "test.h"
 
-char test_window_name[50] = "Test";
-// GLFWwindow        *window;
-// VkInstance        instance;
-// VkSurfaceKHR      surface;
-// VkPhysicalDevice  physical_device = VK_NULL_HANDLE;
-// VkDevice          device;
-// VkQueue           graphics_queue;
-// VkSwapchainKHR    swap_chain;
-
-GLFWwindow* createWindow(GLFWwindow* window, char window_name[50])
+GLFWwindow* createWindow(GLFWwindow *window, char window_name[50])
 {
     window = glfwCreateWindow(WIDTH, HEIGHT, window_name, NULL, NULL);
     return window;
 }
 
-void createInstance(VkInstance instance)
+void createInstance(VkInstance *instance)
 {
     VkApplicationInfo appInfo = {
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
@@ -31,27 +22,27 @@ void createInstance(VkInstance instance)
     uint32_t ext_count = 0;
     const char **ext_names = glfwGetRequiredInstanceExtensions(&ext_count);
 
-    VkInstanceCreateInfo info = {
+    const VkInstanceCreateInfo info = {
         .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
         .pApplicationInfo = &appInfo,
         .enabledExtensionCount = ext_count,
         .ppEnabledExtensionNames = ext_names,
     };
 
-    if (vkCreateInstance(&info, NULL, &instance) != VK_SUCCESS)
+    if (vkCreateInstance(&info, NULL, instance) != VK_SUCCESS)
     {
         fprintf(stderr, "failed to create vulkan instance\n");
         exit(1);
     }
 }
 
-void pickPhysicalDevice(VkInstance instance, VkPhysicalDevice physical_device)
+void pickPhysicalDevice(VkInstance instance, VkPhysicalDevice *physical_device)
 {
     uint32_t count = 0;
     vkEnumeratePhysicalDevices(instance, &count, NULL); //gets the amount of devices
     VkPhysicalDevice *devices = malloc(count * (sizeof(VkPhysicalDevice)));  //allocate space for devices, like GPUs
-    vkEnumeratePhysicalDeviceGroups(instance, &count, devices); //maps devices to allocate memory
-    physical_device = devices[0];
+    vkEnumeratePhysicalDevices(instance, &count, devices); //maps devices to allocate memory
+    *physical_device = devices[0];
     free(devices);
 }
 
@@ -59,7 +50,7 @@ uint32_t findGraphicsFamily(VkPhysicalDevice physical_device)
 {
     uint32_t count = 0;
     vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &count, NULL);
-    VkQueueFamilyProperties *props = malloc(count * (sizeof(props)));
+    VkQueueFamilyProperties *props = malloc(count * (sizeof(VkQueueFamilyProperties)));
     vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &count, props);
 
     for (uint32_t queue_family = 0; queue_family < count; queue_family++)
@@ -76,7 +67,7 @@ uint32_t findGraphicsFamily(VkPhysicalDevice physical_device)
     exit(1);
 }
 
-void createDevice(VkPhysicalDevice physical_device, VkDevice device)
+void createDevice(VkPhysicalDevice physical_device, VkDevice *device, VkQueue *graphics_queue)
 {
     uint32_t queue_family = findGraphicsFamily(physical_device);
     float priority = 1.0f;
@@ -88,9 +79,9 @@ void createDevice(VkPhysicalDevice physical_device, VkDevice device)
         .pQueuePriorities = &priority,
     };
 
-    const char *device_extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+    const char *device_extensions[] = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
-    VkDeviceCreateInfo info =
+    const VkDeviceCreateInfo info =
     {
         .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
         .queueCreateInfoCount = 1,
@@ -99,20 +90,20 @@ void createDevice(VkPhysicalDevice physical_device, VkDevice device)
         .ppEnabledExtensionNames = device_extensions,
     };
 
-    if (vkCreateDevice(physical_device, &info, NULL, &device) != VK_SUCCESS)
+    if (vkCreateDevice(physical_device, &info, NULL, device) != VK_SUCCESS)
     {
         fprintf(stderr, "failed to create logical device\n");
         exit(1);
     }
-    vkGetDeviceQueue(device, queue_family, 0, &device);
+    vkGetDeviceQueue(*device, queue_family, 0, graphics_queue);
 }
 
-void createSwapChain(VkSurfaceKHR surface, VkPhysicalDevice physical_device, VkDevice device, VkSwapchainKHR swap_chain)
+void createSwapChain(VkSurfaceKHR surface, VkPhysicalDevice physical_device, VkDevice device, VkSwapchainKHR *swap_chain)
 {
     VkSurfaceCapabilitiesKHR capabilities;
     vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface, &capabilities);
 
-    VkSwapchainCreateInfoKHR info =
+    const VkSwapchainCreateInfoKHR info =
     {
         .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
         .surface = surface,
@@ -128,7 +119,7 @@ void createSwapChain(VkSurfaceKHR surface, VkPhysicalDevice physical_device, VkD
         .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
     };
 
-    if (vkCreateSwapchainKHR(device, &info, NULL, &swap_chain) != VK_SUCCESS)
+    if (vkCreateSwapchainKHR(device, &info, NULL, swap_chain) != VK_SUCCESS)
     {
         fprintf(stderr, "failed to create swap chain\n");
         exit(1);
