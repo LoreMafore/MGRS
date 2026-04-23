@@ -1,0 +1,27 @@
+Type,Name,Description
+Instance Layer,VK_LAYER_KHRONOS_validation,The main validation layer - catches incorrect API usage and gives helpful error messages
+Instance Layer,VK_LAYER_RENDERDOC_Capture,Injected automatically by RenderDoc to enable GPU frame capture and debugging
+Instance Layer,VK_LAYER_MESA_overlay,Linux only - renders an on-screen overlay showing FPS and GPU stats
+Instance Layer,VK_LAYER_LUNARG_api_dump,Logs every Vulkan API call and its parameters to stdout or a file - useful for tracing
+Instance Layer,VK_LAYER_LUNARG_monitor,Displays FPS in the application window title bar
+Instance Extension,VK_KHR_surface,Base surface extension required for rendering to any window - almost always needed
+Instance Extension,VK_KHR_win32_surface,Windows-specific surface support for creating a renderable window surface
+Instance Extension,VK_KHR_xcb_surface,Linux/X11 XCB surface support
+Instance Extension,VK_KHR_xlib_surface,Linux/X11 Xlib surface support
+Instance Extension,VK_KHR_wayland_surface,Linux Wayland surface support
+Instance Extension,VK_KHR_metal_surface,macOS/iOS Metal surface support
+Instance Extension,VK_EXT_debug_utils,Enables validation layer message callbacks and lets you name objects for easier debugging
+Instance Extension,VK_EXT_debug_report,Older debug callback extension - prefer VK_EXT_debug_utils for new projects
+Instance Extension,VK_KHR_get_physical_device_properties2,Exposes extended physical device properties - required by many device extensions
+Device Extension,VK_KHR_swapchain,Required for presenting rendered frames to a window surface
+Device Extension,VK_KHR_dynamic_rendering,Lets you skip creating explicit RenderPass and Framebuffer objects - modern style
+Device Extension,VK_KHR_buffer_device_address,Allows getting a GPU pointer to a buffer - needed for ray tracing and advanced techniques
+Device Extension,VK_EXT_descriptor_indexing,Enables bindless textures and dynamic descriptor arrays
+Device Extension,VK_KHR_synchronization2,Improved and simplified API for pipeline barriers and synchronization
+Device Extension,VK_KHR_ray_tracing_pipeline,Adds ray tracing shader stages (raygen, miss, hit) for hardware ray tracing
+Device Extension,VK_KHR_acceleration_structure,Provides BLAS/TLAS acceleration structures required for ray tracing
+Device Extension,VK_KHR_shader_draw_parameters,Exposes gl_DrawID and gl_BaseInstance in shaders for indirect drawing
+Device Extension,VK_EXT_mesh_shader,Adds mesh and task shader stages replacing the traditional vertex pipeline
+Device Extension,VK_KHR_multiview,Allows rendering to multiple views in one pass - used for VR stereo rendering
+Device Extension,VK_EXT_memory_budget,Reports how much VRAM you are using and how much is available on the GPU
+Device Extension,VK_KHR_dedicated_allocation,Hints to the driver to give a resource its own dedicated memory allocation

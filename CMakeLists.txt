@@ -27,8 +27,11 @@ FetchContent_MakeAvailable(glfw)
 # ── Executable ────────────────────────────────────────────────────────────────
 add_executable(MGRS
         main.c
-        test.c
-        test.h
+        CoreVulkanUtilis.c
+        CoreVulkanUtilis.h
+        main.h
+        global.h
+        VulkanErrorMacro.h
 )
 
 target_link_libraries(MGRS PRIVATE
