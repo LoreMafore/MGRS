@@ -3,12 +3,26 @@
 //
 #include "Main.h"
 
+#include "KeymapSettings.h"
 #include "Window.h"
 
 int main()
 {
     initialize_glfw();
+    GLFWwindow *window = create_window(100, 100, "Hello World");
     initialize_glad();
+
+    while(!glfwWindowShouldClose(window))
+    {
+        processInputs(window);
+
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+    glfwTerminate();
     return 0;
 }
 

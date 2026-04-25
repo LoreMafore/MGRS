@@ -1,5 +1,5 @@
 //
-// Created by momer on 4/25/2026.
+// Created by Conrad Mercer on 4/25/2026.
 //
 
 #ifndef MGRS_WINDOW_H
@@ -10,6 +10,17 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-void create_window(int height, int width, const char* window_name);
+typedef struct
+{
+    int height;
+    int width;
+    const char* title;
+    float color[4];
+
+
+} window_config_struct;
+
+GLFWwindow* create_window(int height, int width, const char* window_name);
+void resize_window(GLFWwindow *window, int width, int height);
 
 #endif //MGRS_WINDOW_H
