@@ -4,8 +4,10 @@
 #ifndef MGRS_MAIN_H
 #define MGRS_MAIN_H
 #include <stdint.h>
-#include "Global.h"
+#include "glad/glad.h"
+#include <GLFW/glfw3.h>
 
-void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+void initialize_glfw();
+void initialize_glad();
 
 #endif //MGRS_MAIN_H
