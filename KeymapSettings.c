@@ -4,10 +4,15 @@
 
 #include "KeymapSettings.h"
 
-void processInputs(GLFWwindow *window)
+void processInputs(window_config_struct *windows_array[])
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    for (uint16_t i; i < amount_of_windows; i++)
     {
-        glfwSetWindowShouldClose(window, TRUE);
+        if (glfwGetKey(windows_array[i]->window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        {
+            glfwSetWindowShouldClose(windows_array[i]->window, TRUE);
+            // free(windows_array[i]);
+            // windows_array[i] = NULL;
+        }
     }
 }

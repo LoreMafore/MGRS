@@ -2,26 +2,36 @@
 // Created by Conrad Mercer on 4/13/2026.
 //
 #include "Main.h"
-
+#include "Colors.h"
 #include "KeymapSettings.h"
 #include "Window.h"
 
 int main()
 {
     initialize_glfw();
-    GLFWwindow *window = create_window(100, 100, "Hello World");
+    window_config_struct window1;
+    window_config_struct window2;
+
+    config_window(&window1, 100, 100, "window1", RED);
+    config_window(&window2, 500, 500, "window2", BLUE);
+
     initialize_glad();
 
-    while(!glfwWindowShouldClose(window))
+    while(!glfwWindowShouldClose(windows_array[0]->window))
     {
-        processInputs(window);
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        glfwSwapBuffers(window);
+        processInputs(windows_array);
+        render_windows(windows_array);
         glfwPollEvents();
     }
+
+    // for (int16_t i; i < amount_of_windows; i++)
+    // {
+    //     if (windows_array[i] != NULL)
+    //     {
+    //         free(windows_array[i]);
+    //         windows_array[i] = NULL;
+    //     }
+    // }
     glfwTerminate();
     return 0;
 }

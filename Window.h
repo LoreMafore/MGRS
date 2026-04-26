@@ -5,22 +5,13 @@
 #ifndef MGRS_WINDOW_H
 #define MGRS_WINDOW_H
 
-#include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
+#include "Global.h"
 
-typedef struct
-{
-    int height;
-    int width;
-    const char* title;
-    float color[4];
-
-
-} window_config_struct;
-
-GLFWwindow* create_window(int height, int width, const char* window_name);
+void config_window(window_config_struct* window_config, uint16_t height, uint16_t width, const char *title, const float color[4]);
+void create_window(window_config_struct *window_config);
 void resize_window(GLFWwindow *window, int width, int height);
+void render_windows(window_config_struct *windows_array[]);
 
 #endif //MGRS_WINDOW_H

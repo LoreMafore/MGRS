@@ -41,6 +41,7 @@ add_executable(MGRS
         KeymapSettings.h
         Global.c
         Global.h
+        colors.h
 )
 
 target_link_libraries(MGRS PRIVATE

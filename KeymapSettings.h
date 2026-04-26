@@ -7,9 +7,8 @@
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #include "Global.h"
 
-void processInputs(GLFWwindow *window);
+void processInputs(window_config_struct *windows_array[]);
 
 #endif //MGRS_KEYMAPSETTINGS_H

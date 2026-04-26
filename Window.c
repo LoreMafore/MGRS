@@ -4,24 +4,62 @@
 
 #include "Window.h"
 
-GLFWwindow* create_window(int height, int width, const char* window_name)
+// struct window_config_struct
+// {
+//     uint16_t height;
+//     uint16_t width;
+//     const char *title;
+//     float color[4];
+//     GLFWwindow *window; // This is set in the creat_window function
+// };
+
+
+void config_window(window_config_struct* window_config, uint16_t height, uint16_t width, const char *title, const float color[4])
 {
-    GLFWwindow* window = glfwCreateWindow(width, height, window_name, NULL, NULL);
-    if (window == NULL)
+    window_config->height = height;
+    window_config->width = width;
+    window_config->title = title;
+    window_config->color[0] = color[0];
+    window_config->color[1] = color[1];
+    window_config->color[2] = color[2];
+    window_config->color[3] = color[3];
+    create_window(window_config);
+}
+
+void create_window(window_config_struct *window_config)
+{
+    GLFWwindow* window = glfwCreateWindow(window_config->width,window_config->height,window_config->title, NULL, NULL);
+    window_config->window = window;
+
+    if (window_config->window == NULL)
     {
         fprintf(stderr, "Failed to create GLFW window.\n");
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
 
-    glfwSetFramebufferSizeCallback(window, resize_window);
-    glViewport(0, 0, width, height);
-    glfwMakeContextCurrent(window);
+    amount_of_windows++;
+    windows_array = realloc(windows_array, amount_of_windows * sizeof(window_config_struct*));
+    windows_array[amount_of_windows - 1] = window_config;
 
-    return window;
+    glfwSetFramebufferSizeCallback(window_config->window, resize_window);
+    glViewport(0, 0,window_config->width,window_config->height);
+    glfwMakeContextCurrent(window_config->window);
 }
 
 void resize_window(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void render_windows(window_config_struct *windows_array[])
+{
+    for (int i = 0; i < amount_of_windows; i++)
+    {
+        glfwMakeContextCurrent(windows_array[i]->window);
+        glClearColor(windows_array[i]->color[0], windows_array[i]->color[1], windows_array[i]->color[2], windows_array[i]->color[3]);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glfwSwapBuffers(windows_array[i]->window);
+
+    }
 }
