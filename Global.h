@@ -19,6 +19,7 @@ typedef struct window_config_struct
     const char *title;
     float color[4];
     GLFWwindow *window; // This is set in the creat_window function
+    uint8_t debug_bool;
 } window_config_struct;
 
 extern window_config_struct **windows_array;

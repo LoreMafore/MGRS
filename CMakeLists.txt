@@ -27,6 +27,18 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(glfw)
 
+# ── cglm ──────────────────────────────────────────────────────────────────────
+FetchContent_Declare(
+        cglm
+        GIT_REPOSITORY https://github.com/recp/cglm.git
+        GIT_TAG        v0.9.4
+)
+
+set(CGLM_SHARED  OFF CACHE BOOL "" FORCE)
+set(CGLM_STATIC  ON  CACHE BOOL "" FORCE)
+set(CGLM_USE_TEST OFF CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(cglm)
 
 # ── OpenGL ──────────────────────────────────────────────────────────────────────
 find_package(OpenGL 3.3 REQUIRED)
@@ -42,10 +54,15 @@ add_executable(MGRS
         Global.c
         Global.h
         colors.h
+        shaders.c
+        shaders.h
 )
 
 target_link_libraries(MGRS PRIVATE
         glad
         glfw
         OpenGL::GL
+        cglm
 )
+
+target_include_directories(MGRS PRIVATE ${cglm_SOURCE_DIR}/include)
