@@ -22,8 +22,8 @@ typedef struct
 char* read_file(const char *filepath);
 uint32_t compile_shader(const char*filepath, GLenum shader_type);
 uint32_t create_shader_program(const char *vertex_shader, const char *fragment_shader);
-void set_orthographic_projection(float origin_x, float width, float height, float origin_y, mat4 projection);
-grid_data_struct build_grid(uint32_t shader_program, float width, float height, float spacing);
+void set_orthographic_projection(uint32_t shader_program, float origin_x, float origin_y, float width, float height);
+grid_data_struct build_grid(uint32_t shader_program, float width, float height, float horizontal_spacing, float vertical_spacing);
 void render_grid(grid_data_struct *grid);
 void destroy_grid(grid_data_struct *grid);
 
