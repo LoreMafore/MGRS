@@ -145,3 +145,19 @@ grid_data_struct build_grid(uint32_t shader_program, float width, float height, 
     return data;
 }
 
+void render_grid(grid_data_struct *grid)
+{
+    glUseProgram(grid->shader_program);
+    glBindVertexArray(grid->vao);
+    glDrawArrays(GL_LINES, 0, grid->vertex_count);
+    glBindVertexArray(0);
+}
+
+void destroy_grid(grid_data_struct* grid)
+{
+    glDeleteVertexArrays(1, &grid->vao);
+    glDeleteBuffers(1, &grid->vbo);
+    // glDeleteProgram(grid->shader_program);
+}
+
+

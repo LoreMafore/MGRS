@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <glad.h>
 #include <cglm/cglm.h>
-#include "Global.h"
 
 typedef struct
 {

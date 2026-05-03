@@ -3,7 +3,6 @@
 //
 
 #include "Window.h"
-
 // struct window_config_struct
 // {
 //     uint16_t height;
@@ -43,13 +42,22 @@ void create_window(window_config_struct *window_config)
     windows_array[amount_of_windows - 1] = window_config;
 
     glfwSetFramebufferSizeCallback(window_config->window, resize_window);
-    glViewport(0, 0,window_config->width,window_config->height);
+    // glViewport(0, 0,window_config->width,window_config->height);
     glfwMakeContextCurrent(window_config->window);
 }
 
 void resize_window(GLFWwindow* window, int width, int height)
 {
+    glfwMakeContextCurrent(window);
     glViewport(0, 0, width, height);
+
+    window_config_struct *config = glfwGetWindowUserPointer(window);
+    config->height = height;
+    config->width = width;
+
+    set_orthographic_projection(config->grid_data.shader_program, 0.0f, 0.0f, width, height);
+    destroy_grid(&config->grid_data);
+    config->grid_data = build_grid(config->grid_data.shader_program, width, height, 5.0f, 5.0f);
 }
 
 void render_windows(window_config_struct *windows_array[])
@@ -59,7 +67,7 @@ void render_windows(window_config_struct *windows_array[])
         glfwMakeContextCurrent(windows_array[i]->window);
         glClearColor(windows_array[i]->color[0], windows_array[i]->color[1], windows_array[i]->color[2], windows_array[i]->color[3]);
         glClear(GL_COLOR_BUFFER_BIT);
+        render_grid(&windows_array[i]->grid_data);
         glfwSwapBuffers(windows_array[i]->window);
-
     }
 }

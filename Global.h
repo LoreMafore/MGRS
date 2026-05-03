@@ -5,6 +5,7 @@
 #ifndef MGRS_GLOBAL_H
 #define MGRS_GLOBAL_H
 #include <stdint.h>
+#include "shaders.h"
 #include <GLFW/glfw3.h>
 
 #define TRUE 1
@@ -20,6 +21,7 @@ typedef struct window_config_struct
     float color[4];
     GLFWwindow *window; // This is set in the creat_window function
     uint8_t debug_bool;
+    grid_data_struct grid_data;
 } window_config_struct;
 
 extern window_config_struct **windows_array;
