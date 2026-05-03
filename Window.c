@@ -13,7 +13,7 @@
 // };
 
 
-void config_window(window_config_struct* window_config, uint16_t height, uint16_t width, const char *title, const float color[4])
+void config_window(window_config_struct* window_config, uint16_t height, uint16_t width, const char *title, const float color[4], float grid_spacing[2] )
 {
     window_config->height = height;
     window_config->width = width;
@@ -23,6 +23,8 @@ void config_window(window_config_struct* window_config, uint16_t height, uint16_
     window_config->color[2] = color[2];
     window_config->color[3] = color[3];
     create_window(window_config);
+    window_config->grid_spacing_horizontal = grid_spacing[0];
+    window_config->grid_spacing_vertical = grid_spacing[1];
 }
 
 void create_window(window_config_struct *window_config)
@@ -36,6 +38,8 @@ void create_window(window_config_struct *window_config)
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
+
+    glfwSetWindowUserPointer(window_config->window, window_config);
 
     amount_of_windows++;
     windows_array = realloc(windows_array, amount_of_windows * sizeof(window_config_struct*));
@@ -52,12 +56,17 @@ void resize_window(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 
     window_config_struct *config = glfwGetWindowUserPointer(window);
+    if (config == NULL)
+    {
+        fprintf(stderr, "Failed to resize GLFW window.\n");
+        return;
+    }
     config->height = height;
     config->width = width;
 
     set_orthographic_projection(config->grid_data.shader_program, 0.0f, 0.0f, width, height);
     destroy_grid(&config->grid_data);
-    config->grid_data = build_grid(config->grid_data.shader_program, width, height, 5.0f, 5.0f);
+    config->grid_data = build_grid(config->grid_data.shader_program, width, height, config->grid_spacing_horizontal, config->grid_spacing_vertical);
 }
 
 void render_windows(window_config_struct *windows_array[])

@@ -3,6 +3,7 @@
 //
 
 #include "shaders.h"
+#include "math.h"
 
 
 void orthographic_projection(float origin_x, float width, float height, float origin_y, mat4 projection)
@@ -91,7 +92,7 @@ uint32_t create_shader_program(const char* vertex_shader, const char* fragment_s
 void set_orthographic_projection(uint32_t shader_program, float origin_x, float origin_y, float width, float height)
 {
     mat4 projection;
-    glm_ortho(origin_x, width, height, origin_y, -1.0f, 1.0f, projection);
+    glm_ortho(origin_x, width, origin_y, height, -1.0f, 1.0f, projection);
 
     glUseProgram(shader_program);
     uint32_t loc = glGetUniformLocation(shader_program, "projection");
@@ -100,8 +101,8 @@ void set_orthographic_projection(uint32_t shader_program, float origin_x, float 
 
 grid_data_struct build_grid(uint32_t shader_program, float width, float height, float horizontal_spacing, float vertical_spacing)
 {
-    int horizontal_lines = (int)(height / horizontal_spacing) + 1;
-    int vertical_lines = (int)(width / vertical_spacing) + 1;
+    int horizontal_lines = (int)ceilf(height / horizontal_spacing) + 1;
+    int vertical_lines = (int)ceilf(width / vertical_spacing) + 1;
     int total_lines = horizontal_lines + vertical_lines;
 
     int vertice_count = total_lines * 2 * 3;

@@ -22,6 +22,8 @@ typedef struct window_config_struct
     GLFWwindow *window; // This is set in the creat_window function
     uint8_t debug_bool;
     grid_data_struct grid_data;
+    float grid_spacing_horizontal;
+    float grid_spacing_vertical;
 } window_config_struct;
 
 extern window_config_struct **windows_array;
